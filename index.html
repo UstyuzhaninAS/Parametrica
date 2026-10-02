@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Parametrica · Стратегия цифровой трансформации · v5.4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --bg: #06060a;
+    --bg-2: #0f0f14;
+    --bg-3: #1a1a22;
+    --text: #f0f0f2;
+    --text-dim: #7a7a85;
+    --text-muted: #4a4a55;
+    --accent: #00d9a3;
+    --accent-glow: rgba(0, 217, 163, 0.25);
+    --gold: #d4af37;
+    --danger: #ff4d5a;
+    --border: rgba(255,255,255,0.06);
+    --border-light: rgba(255,255,255,0.12);
+  }
+  
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .presentation {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .slide {
+    position: absolute;
+    inset: 0;
+    padding: 6vh 8vw 10vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0.8s;
+    pointer-events: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  
+  .slide-num {
+    position: absolute;
+    top: 5vh;
+    left: 8vw;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  
+  .slide-num::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-right: 14px;
+  }
+  
+  .brand {
+    position: absolute;
+    top: 5vh;
+    right: 8vw;
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  
+  h1 {
+    font-size: clamp(32px, 5.5vw, 84px);
+    font-weight: 200;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 3vh;
+    max-width: 90%;
+  }
+  
+  h1 strong {
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--accent), var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  h2 {
+    font-size: clamp(24px, 3.2vw, 52px);
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    margin-bottom: 3vh;
+    line-height: 1.1;
+    max-width: 85%;
+  }
+  
+  h2 strong { font-weight: 600; color: var(--accent); }
+  
+  h3 {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2vh;
+  }
+  
+  p, li {
+    font-size: clamp(14px, 1.05vw, 17px);
+    line-height: 1.65;
+    color: var(--text);
+    font-weight: 300;
+  }
+  
+  .lead {
+    font-size: clamp(16px, 1.4vw, 22px);
+    color: var(--text-dim);
+    max-width: 75%;
+    line-height: 1.55;
+    font-weight: 300;
+  }
+  
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 3vh;
+    font-weight: 500;
+  }
+  
+  .slide-titular {
+    background:
+      radial-gradient(ellipse at 85% 15%, rgba(0, 217, 163, 0.12), transparent 55%),
+      radial-gradient(ellipse at 15% 85%, rgba(212, 175, 55, 0.06), transparent 55%),
+      var(--bg);
+  }
+  
+  .slide-titular h1 {
+    font-size: clamp(36px, 6vw, 96px);
+    font-weight: 100;
+    max-width: 95%;
+    line-height: 1;
+  }
+  
+  .slide-titular .meta {
+    margin-top: 6vh;
+    display: flex;
+    gap: 5vw;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+  }
+  
+  .slide-titular .meta span b {
+    color: var(--text);
+    font-weight: 500;
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2vw; margin-top: 2vh; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5vw; margin-top: 2vh; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 3vw; margin-top: 2vh; }
+  
+  .card {
+    background: linear-gradient(145deg, var(--bg-2), var(--bg-3));
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.8vw;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+  }
+  
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+  }
+  
+  .card h4 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 1.2vh;
+    letter-spacing: -0.01em;
+  }
+  
+  .card p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+  
+  .card-num {
+    position: absolute;
+    top: 1.2vw;
+    right: 1.5vw;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+  
+  .card.accent {
+    background: linear-gradient(145deg, rgba(0,217,163,0.06), var(--bg-2));
+    border-color: rgba(0,217,163,0.3);
+  }
+  
+  .card.gold {
+    background: linear-gradient(145deg, rgba(212,175,55,0.06), var(--bg-2));
+    border-color: rgba(212,175,55,0.3);
+  }
+  
+  .card-problem-solution {
+    background: linear-gradient(145deg, var(--bg-2), var(--bg-3));
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-problem-solution:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+  }
+  
+  .card-problem-solution .problem-section {
+    padding: 1.8vw 1.8vw 1.2vh;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  
+  .card-problem-solution .problem-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--danger), transparent);
+  }
+  
+  .card-problem-solution .problem-section h4 {
+    color: var(--danger);
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 0.8vh;
+    letter-spacing: -0.01em;
+  }
+  
+  .card-problem-solution .problem-section p {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  
+  .card-problem-solution .solution-section {
+    padding: 1.2vh 1.8vw 1.8vw;
+    position: relative;
+  }
+  
+  .card-problem-solution .solution-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+  
+  .card-problem-solution .solution-section h4 {
+    color: var(--accent);
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 0.8vh;
+    letter-spacing: -0.01em;
+  }
+  
+  .card-problem-solution .solution-section p {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  
+  .card-problem-solution .card-num {
+    position: absolute;
+    top: 1.2vw;
+    right: 1.5vw;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+  
+  .table-container {
+    width: 100%;
+    max-height: 62vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    margin-top: 2vh;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  
+  .table-container::-webkit-scrollbar { width: 6px; height: 6px; }
+  .table-container::-webkit-scrollbar-track { background: var(--bg-2); }
+  .table-container::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 3px; }
+  
+  .table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  
+  .table th, .table td {
+    padding: 1vh 1vw;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  
+  .table th {
+    position: sticky;
+    top: 0;
+    background: var(--bg-2);
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 10px;
+    z-index: 10;
+  }
+  
+  .table td { color: var(--text-dim); }
+  .table tr:hover td { background: rgba(255,255,255,0.02); color: var(--text); }
+  
+  .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+  .badge-need { background: rgba(0,217,163,0.15); color: var(--accent); }
+  .badge-waste { background: rgba(255,77,90,0.1); color: var(--danger); }
+  .badge-ai { background: rgba(212,175,55,0.15); color: var(--gold); }
+  .badge-neutral { background: rgba(255,255,255,0.05); color: var(--text-dim); }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2vw;
+    margin-top: 3vh;
+  }
+  
+  .stat {
+    text-align: left;
+    padding: 2vh 0;
+    border-top: 1px solid var(--border);
+  }
+  
+  .stat-num {
+    font-size: clamp(28px, 3.5vw, 48px);
+    font-weight: 200;
+    letter-spacing: -0.03em;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 1vh;
+  }
+  
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+  }
+  
+  .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+    z-index: 100;
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+  
+  .nav {
+    position: fixed;
+    bottom: 4vh;
+    right: 8vw;
+    display: flex;
+    gap: 10px;
+    z-index: 50;
+  }
+  
+  .nav button {
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--border-light);
+    background: var(--bg-2);
+    color: var(--text);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .nav button:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,217,163,0.05);
+  }
+  
+  .nav button:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+  
+  .nav button:disabled { opacity: 0.2; cursor: not-allowed; }
+  
+  .slide-counter {
+    position: fixed;
+    bottom: 4.5vh;
+    left: 8vw;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    z-index: 50;
+  }
+  
+  .slide-counter b { color: var(--accent); font-weight: 600; }
+  
+  ul.clean { list-style: none; margin-top: 1.5vh; }
+  ul.clean li {
+    padding: 1vh 0;
+    padding-left: 2vw;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  ul.clean li:last-child { border-bottom: none; }
+  ul.clean li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 2vh;
+    width: 8px;
+    height: 1px;
+    background: var(--accent);
+  }
+  ul.clean li strong { color: var(--text); font-weight: 500; }
+  
+  kbd {
+    display: inline-block;
+    padding: 3px 8px;
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg-3);
+    border: 1px solid var(--border-light);
+    border-radius: 3px;
+    color: var(--text-dim);
+    margin: 0 3px;
+  }
+  
+  .hint {
+    position: fixed;
+    bottom: 4.5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    z-index: 50;
+    opacity: 0.5;
+    font-family: 'JetBrains Mono', monospace;
+    text-align: center;
+    pointer-events: none;
+  }
+  
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin: 2vh 0;
+  }
+  
+  .slide.active .fade-up { animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+  .slide.active .fade-up:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active .fade-up:nth-child(2) { animation-delay: 0.12s; }
+  .slide.active .fade-up:nth-child(3) { animation-delay: 0.19s; }
+  .slide.active .fade-up:nth-child(4) { animation-delay: 0.26s; }
+  .slide.active .fade-up:nth-child(5) { animation-delay: 0.33s; }
+  .slide.active .fade-up:nth-child(6) { animation-delay: 0.40s; }
+  .slide.active .fade-up:nth-child(7) { animation-delay: 0.47s; }
+  .slide.active .fade-up:nth-child(8) { animation-delay: 0.54s; }
+  
+  .fade-up { opacity: 0; transform: translateY(24px); }
+  
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5vw;
+    margin-top: 3vh;
+  }
+  
+  .btn-detail {
+    background: linear-gradient(145deg, var(--bg-2), var(--bg-3));
+    border: 1px solid var(--border-light);
+    color: var(--text);
+    padding: 1.2vh 2vw;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .btn-detail::before {
+    content: '→';
+    color: var(--accent);
+    font-size: 16px;
+    transition: transform 0.3s;
+  }
+  
+  .btn-detail:hover {
+    border-color: var(--accent);
+    background: rgba(0,217,163,0.05);
+    transform: translateY(-2px);
+  }
+  
+  .btn-detail:hover::before {
+    transform: translateX(4px);
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 5vh 8vw;
+  }
+  
+  .modal-overlay.active {
+    display: flex;
+  }
+  
+  .modal-content {
+    background: var(--bg-2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 4vh 4vw;
+    max-width: 900px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  
+  .modal-close {
+    position: absolute;
+    top: 2vh;
+    right: 2vw;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border-light);
+    background: var(--bg-3);
+    color: var(--text);
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+  
+  .modal-close:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  
+  .modal-content h3 {
+    font-size: 22px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--accent);
+    margin-bottom: 2vh;
+    padding-right: 50px;
+  }
+  
+  .modal-content h4 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 2vh;
+    margin-bottom: 1vh;
+    color: var(--text);
+  }
+  
+  .modal-content p, .modal-content li {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  
+  .modal-content ul {
+    margin-left: 2vw;
+    margin-top: 1vh;
+  }
+  
+  .modal-content ul li {
+    padding: 0.5vh 0;
+    list-style: none;
+    position: relative;
+    padding-left: 1.5vw;
+  }
+  
+  .modal-content ul li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+  
+  .mockup {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2vh 2vw;
+    margin-top: 2vh;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  
+  .mockup-row {
+    display: flex;
+    align-items: center;
+    padding: 0.8vh 0;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .mockup-row:last-child { border-bottom: none; }
+  
+  .mockup-label {
+    flex: 1;
+    color: var(--text);
+  }
+  
+  .mockup-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 1vw;
+  }
+  
+  .mockup-indicator.green { background: var(--accent); }
+  .mockup-indicator.yellow { background: var(--gold); }
+  .mockup-indicator.gray { background: var(--text-muted); }
+  .mockup-indicator.red { background: var(--danger); }
+  
+  @media (max-width: 1024px) {
+    .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .lead { max-width: 100%; }
+    h1, h2 { max-width: 100%; }
+    .slide { padding: 5vh 6vw 10vh; }
+    .slide-num { font-size: 10px; left: 6vw; }
+    .brand { font-size: 9px; right: 6vw; }
+  }
+  
+  @media (max-width: 640px) {
+    .grid-3, .grid-4, .stats { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .slide { padding: 4vh 5vw 12vh; }
+    .slide-num { font-size: 9px; left: 5vw; top: 4vh; }
+    .slide-num::before { width: 20px; margin-right: 10px; }
+    .brand { font-size: 8px; right: 5vw; top: 4vh; letter-spacing: 3px; }
+    
+    h1 { font-size: clamp(28px, 8vw, 48px); margin-bottom: 2vh; }
+    h2 { font-size: clamp(22px, 6vw, 36px); margin-bottom: 2vh; }
+    h3 { font-size: 11px; margin-bottom: 1.5vh; }
+    p, li { font-size: 14px; }
+    .lead { font-size: 15px; max-width: 100%; }
+    .eyebrow { font-size: 10px; letter-spacing: 4px; margin-bottom: 2vh; }
+    
+    .slide-titular h1 { font-size: clamp(32px, 9vw, 56px); }
+    .slide-titular .meta { gap: 3vw; margin-top: 4vh; }
+    .slide-titular .meta span { flex: 1 1 30%; }
+    .slide-titular .meta span b { font-size: 13px; }
+    
+    .card { padding: 4vw; }
+    .card h4 { font-size: 15px; }
+    .card p { font-size: 12px; }
+    .card-num { font-size: 9px; }
+    
+    .card-problem-solution .problem-section,
+    .card-problem-solution .solution-section { padding: 3.5vw; }
+    .card-problem-solution .problem-section h4,
+    .card-problem-solution .solution-section h4 { font-size: 14px; }
+    .card-problem-solution .problem-section p,
+    .card-problem-solution .solution-section p { font-size: 11px; }
+    
+    .stats { gap: 3vw; margin-top: 2vh; }
+    .stat { padding: 1.5vh 0; }
+    .stat-num { font-size: clamp(24px, 7vw, 36px); }
+    .stat-label { font-size: 11px; }
+    
+    .table { font-size: 11px; min-width: 500px; }
+    .table th, .table td { padding: 0.8vh 0.8vw; }
+    .badge { font-size: 8px; padding: 2px 6px; }
+    
+    .nav { bottom: 3vh; right: 5vw; }
+    .nav button { width: 44px; height: 44px; font-size: 18px; }
+    .slide-counter { bottom: 3.5vh; left: 5vw; font-size: 10px; }
+    .hint { bottom: 3.5vh; font-size: 9px; letter-spacing: 2px; }
+    
+    ul.clean li { font-size: 13px; padding-left: 1.5vw; }
+    
+    .btn-group { flex-direction: column; gap: 1vh; }
+    .btn-detail { padding: 1.5vh 2vw; font-size: 12px; }
+    
+    .modal-content { padding: 3vh 3vw; }
+  }
+  
+  @media (max-width: 380px) {
+    .slide { padding: 3vh 4vw 12vh; }
+    h1 { font-size: clamp(24px, 9vw, 40px); }
+    h2 { font-size: clamp(20px, 7vw, 32px); }
+    .lead { font-size: 14px; }
+    .card { padding: 3.5vw; }
+    .nav button { width: 40px; height: 40px; }
+  }
+  
+  @media (max-height: 500px) and (orientation: landscape) {
+    .slide { padding: 3vh 6vw 8vh; }
+    h1 { font-size: clamp(24px, 4vh, 48px); margin-bottom: 1.5vh; }
+    h2 { font-size: clamp(20px, 3.5vh, 36px); margin-bottom: 1.5vh; }
+    .lead { font-size: 14px; }
+    .stats { margin-top: 1.5vh; }
+    .stat { padding: 1vh 0; }
+    .grid-3, .grid-4 { gap: 1vw; }
+    .card { padding: 1.5vw; }
+    .eyebrow { margin-bottom: 1.5vh; }
+    .divider { margin: 1.5vh 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="presentation" id="presentation">
+
+  <!-- SLIDE 1: TITULAR -->
+  <section class="slide slide-titular active">
+    <div class="eyebrow fade-up">Стратегический документ · 2026 · Версия 5.4</div>
+    <h1 class="fade-up">Цифровая<br>трансформация<br><strong>Parametrica</strong></h1>
+    <div class="lead fade-up">«Легкий СОД» + AI-кластер NVIDIA DGX Spark · Локальные модели 72B · Scale-Out архитектура</div>
+    <div class="meta fade-up">
+      <span>Дата<b>25.09.2026</b></span>
+      <span>Статус<b>Для ознакомления</b></span>
+      <span>Слайдов<b>12</b></span>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: БОЛИ -->
+  <section class="slide">
+    <div class="slide-num">01 · Боли бюро</div>
+    <div class="brand">Что тормозит рост</div>
+    <h2 class="fade-up">Три системные <strong>проблемы</strong></h2>
+    <div class="grid-3 fade-up">
+      <div class="card-problem-solution">
+        <div class="card-num">01</div>
+        <div class="problem-section">
+          <h4>Срывы сроков</h4>
+          <p>Долгое формирование исполнительной документации и альбомов разных разделов. Расчет ТЭП — группа не всегда успевает корректно сформировать BIM-модель для автоматической подгрузки данных. Ручной пересчет = 4-8 часов на проект.</p>
+        </div>
+        <div class="solution-section">
+          <h4>Автоматизация + AI</h4>
+          <p>Автоматическое формирование альбомов из BIM. AI-ассистент проверки комплектности и ТЭП. Сокращение времени с дней до часов.</p>
+        </div>
+      </div>
+      <div class="card-problem-solution">
+        <div class="card-num">02</div>
+        <div class="problem-section">
+          <h4>Зоопарк коммуникаций</h4>
+          <p>Синхронизация между подразделениями через почту, мессенджеры. Задачи теряются, статусы не видны. Нет единого источника истины.</p>
+        </div>
+        <div class="solution-section">
+          <h4>Шаблоны Outlook + AI-агенты</h4>
+          <p>Шаблоны писем при отправке заданий и результатов. AI считывает шаблоны → автоматически размещает данные в Kaiten, Google Таблицах, ЭЛМА. Сроки, ответственные, KPI — всё в одном месте.</p>
+        </div>
+      </div>
+      <div class="card-problem-solution">
+        <div class="card-num">03</div>
+        <div class="problem-section">
+          <h4>Отсутствие нормоконтроля</h4>
+          <p>Нет отдела ПТО. Заказчик давит за качество. Ошибки в штампах, коллизии, несоответствия нормам. Возвраты документации — 3-4 итерации до утверждения.</p>
+        </div>
+        <div class="solution-section">
+          <h4>Revit-экспорт + AI-нормоконтроль</h4>
+          <p>Revit-модель экспортирует XML/IFC/PDF → AI-агенты считывают, определяют ошибки, коллизии, несоответствия федеральным/муниципальным нормам и замечаниям в базе (Фонд реновации, ДГП, заказчик).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: ЛЕГКИЙ СОД -->
+  <section class="slide">
+    <div class="slide-num">02 · Решение</div>
+    <div class="brand">Стратегия</div>
+    <h2 class="fade-up">Выбираем <strong>«Легкий СОД»</strong></h2>
+    <div class="divider fade-up"></div>
+    <p class="lead fade-up">Не покупаем коробочный СОД с 60% мертвого груза. Строим кастомное решение на базе Kaiten + Revit API + AI-кластер DGX Spark, закрывающее 100% потребностей генпроектировщика.</p>
+    
+    <h3 class="fade-up" style="margin-top:3vh">Плюсы «Легкого СОД»</h3>
+    <div class="grid-4 fade-up">
+      <div class="card accent">
+        <h4>100% функционала</h4>
+        <p>Только то, что нужно генпроектировщику. Никакого мертвого груза.</p>
+      </div>
+      <div class="card accent">
+        <h4>AI enterprise-уровня</h4>
+        <p>Локальные 72B модели. Нормоконтроль, юридический анализ, прогнозирование.</p>
+      </div>
+      <div class="card accent">
+        <h4>Максимальная гибкость</h4>
+        <p>Пишем под себя. Интеграции с ЭЛМА, 1С, Revit через API.</p>
+      </div>
+      <div class="card accent">
+        <h4>Независимость</h4>
+        <p>Не навязываем систему Заказчику. Работаем в своей среде.</p>
+      </div>
+    </div>
+    
+    <h3 class="fade-up" style="margin-top:3vh">Подробнее — нажмите на интересующий блок</h3>
+    <div class="btn-group fade-up">
+      <button class="btn-detail" onclick="openModal('modal-functions')">Таблица 36 функций CDE</button>
+      <button class="btn-detail" onclick="openModal('modal-compare')">Сравнение: покупка vs свой</button>
+      <button class="btn-detail" onclick="openModal('modal-why')">Почему не коробочный СОД</button>
+      <button class="btn-detail" onclick="openModal('modal-needs')">6 потребностей генпроектировщика</button>
+      <button class="btn-detail" onclick="openModal('modal-customer')">Кто должен платить за СОД</button>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: ФУНКЦИИ ЛЕГКОГО СОД -->
+  <section class="slide">
+    <div class="slide-num">03 · Функции «Легкого СОД»</div>
+    <div class="brand">Что реализуем</div>
+    <h2 class="fade-up">Функции ядра + <strong>как реализуем</strong></h2>
+    <div class="grid-2 fade-up">
+      <div>
+        <h3>Ядро «Легкого СОД»</h3>
+        <ul class="clean">
+          <li><strong>Версионность файлов</strong> (RVT, IFC, PDF, DWG) — через плагин Revit → Kaiten</li>
+          <li><strong>Система замечаний</strong> (Issue Tracking) — интеграция Revit/Navisworks с Kaiten</li>
+          <li><strong>Маршруты согласования</strong> — внутренние цепочки в Kaiten до выпуска Заказчику</li>
+          <li><strong>Централизованный архив</strong> — единое пространство без «флешек и почт»</li>
+          <li><strong>Авто-Ведомости выдачи</strong> — скрипт выгрузки из Kaiten/Revit → Excel/PDF</li>
+          <li><strong>Интеграция с ЭЛМА</strong> — мастер-подчиненная синхронизация статусов</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Как реализуем (Vibe Coding)</h3>
+        <ul class="clean">
+          <li><strong>Плагин Revit «Выпуск в Kaiten»:</strong> модель и листы → Kaiten, версия + метаданные (шифр, стадия)</li>
+          <li><strong>Система замечаний:</strong> замечание из модели → задача в Kaiten с привязкой к виду</li>
+          <li><strong>Синхронизация с ЭЛМА:</strong> ЭЛМА — мастер для факта подписи, Kaiten — мастер для процесса согласования</li>
+          <li><strong>Шаблоны Outlook:</strong> AI считывает шаблоны писем → автоматически размещает данные в Kaiten, Google Таблицах, ЭЛМА</li>
+          <li><strong>Авто-Ведомости:</strong> скрипт выгрузки списка выпущенных документов</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: AI-АГЕНТЫ + КОНСТРУКТОРЫ -->
+  <section class="slide">
+    <div class="slide-num">04 · AI-агенты и конструкторы</div>
+    <div class="brand">Разрабатываемые решения</div>
+    <h2 class="fade-up">AI-агенты и <strong>конструкторы документов</strong></h2>
+    
+    <h3 class="fade-up">Базовые AI-агенты</h3>
+    <div class="grid-3 fade-up">
+      <div class="card gold">
+        <div class="card-num">01</div>
+        <h4>Юридический AI</h4>
+        <p>Реестр договоров, счетов, актов. OCR сканов. Сравнение версий. Поиск противоречий и юридических рисков.</p>
+      </div>
+      <div class="card gold">
+        <div class="card-num">02</div>
+        <h4>BIM-ассистент</h4>
+        <p>Генерация Python/Dynamo/C# скриптов для Revit. Написание модулей и плагинов к Revit API.</p>
+      </div>
+      <div class="card gold">
+        <div class="card-num">03</div>
+        <h4>Нормоконтроль и планировки</h4>
+        <p>Revit экспортирует XML/IFC/PDF → AI считывает, определяет ошибки, коллизии, несоответствия нормам.</p>
+      </div>
+      <div class="card gold">
+        <div class="card-num">04</div>
+        <h4>Прогнозирование и аналитика</h4>
+        <p>Своя БД документооборота и база проектов. Формирование прогнозируемых рисков, сроков, стоимостей.</p>
+      </div>
+      <div class="card gold">
+        <div class="card-num">05</div>
+        <h4>Коммуникации и документооборот</h4>
+        <p>Email-to-Task. OCR сканов → ЭЛМА. Авто-Ведомости выдачи. Шаблоны Outlook → Kaiten.</p>
+      </div>
+      <div class="card gold">
+        <div class="card-num">06</div>
+        <h4>Работа с заказчиком и госсектором</h4>
+        <p>Генерация ответов на замечания экспертизы (Human in the loop). RAG по СП и ГОСТ.</p>
+      </div>
+    </div>
+    
+    <!-- НОВЫЙ БЛОК: ДВИЖОК ЗАМЕЧАНИЙ -->
+    <div class="card accent fade-up" style="margin-top: 3vh; border-left: 4px solid var(--gold);">
+      <div class="card-num">★</div>
+      <h4 style="color: var(--gold); font-size: 18px; margin-bottom: 1.5vh;">🚀 Флагман: AI-движок обработки замечаний проверяющих органов (МФР, ДГП, Экспертиза)</h4>
+      <div class="grid-2" style="margin-top: 0; gap: 2vw;">
+        <div>
+          <p><strong>Задача:</strong> Обработка сотен Word-файлов (10 КБ – 5 МБ) в месяц. Извлечение раздела, шифра, осей, фрагментов изображений и текста замечания.</p>
+          <ul class="clean" style="margin-top: 1vh;">
+            <li>Автоматическая типизация и создание единой БД замечаний</li>
+            <li>Проверка легитимности: сравнение фрагмента с актуальным чертежом на сервере</li>
+            <li>Авто-рассылка ответственным руководителям групп</li>
+            <li>Поиск паттернов для формирования чек-листов проверяющих органов</li>
+          </ul>
+        </div>
+        <div>
+          <p><strong>Реализуемость:</strong> Да, реализуемо на <strong>1 DGX Spark</strong> (в пакетном ночном режиме) или <strong>2 DGX Spark</strong> (для параллельной обработки текста и графики).</p>
+          <ul class="clean" style="margin-top: 1vh;">
+            <li><strong>Парсинг + OCR:</strong> python-docx + PaddleOCR</li>
+            <li><strong>Логика и классификация:</strong> Qwen2.5-72B-Instruct</li>
+            <li><strong>Сравнение с чертежом (VLM):</strong> Qwen2-VL-72B</li>
+            <li><strong>Поиск паттернов (RAG):</strong> BGE-m3 + Qdrant</li>
+          </ul>
+          <button class="btn-detail" style="margin-top: 1.5vh; width: 100%; justify-content: center;" onclick="openModal('modal-comments-engine')">Подробнее о пайплайне и бюджете →</button>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="fade-up" style="margin-top:3vh">Конструкторы документов — нажмите для деталей</h3>
+    <div class="btn-group fade-up">
+      <button class="btn-detail" onclick="openModal('modal-constructor-contract')">📄 Конструктор договоров</button>
+      <button class="btn-detail" onclick="openModal('modal-constructor-tz')">📋 Конструктор ТЗ</button>
+      <button class="btn-detail" onclick="openModal('modal-constructor-responses')">✉️ Конструктор ответов на замечания</button>
+      <button class="btn-detail" onclick="openModal('modal-constructor-job')">👤 Конструктор должностных инструкций</button>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: МОДЕЛИ -->
+  <section class="slide">
+    <div class="slide-num">05 · Модели</div>
+    <div class="brand">AI-инфраструктура</div>
+    <h2 class="fade-up">Локальные модели <strong>72B+</strong></h2>
+    <div class="table-container fade-up">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Задача</th>
+            <th>Модель</th>
+            <th>Обоснование</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Основная логика, RAG, анализ договоров, юридические риски</strong></td>
+            <td>Qwen2.5-72B-Instruct</td>
+            <td>Лучшая открытая модель для русского языка. Превосходит Llama-3-70B в логике и работе с длинным контекстом (до 128k токенов).</td>
+          </tr>
+          <tr>
+            <td><strong>Генерация кода (Python, Dynamo, C# для Revit API)</strong></td>
+            <td>Qwen2.5-Coder-32B-Instruct (или 72B)</td>
+            <td>Специализированная кодовая модель. 32B версия работает быстро и превосходит крупные модели в написании и отладке скриптов.</td>
+          </tr>
+          <tr>
+            <td><strong>Анализ графики, PDF-альбомов, чертежей (VLM)</strong></td>
+            <td>Qwen2-VL-72B-Instruct или Llama-3.2-90B-Vision</td>
+            <td>Мультимодальные модели, способные «смотреть» на изображения, схемы, фрагменты чертежей и отвечать на вопросы по ним.</td>
+          </tr>
+          <tr>
+            <td><strong>Векторизация (Embeddings) для RAG-базы</strong></td>
+            <td>BGE-m3 или multilingual-e5-large</td>
+            <td>Не требуют больших GPU. Специализированы для создания векторных представлений текстов на множестве языков, включая русский.</td>
+          </tr>
+          <tr>
+            <td><strong>OCR (Распознавание сканов)</strong></td>
+            <td>PaddleOCR или Surya</td>
+            <td>Специализированные легкие нейросети. Использовать 70B модель для OCR неэффективно и дорого.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead fade-up" style="margin-top:3vh; max-width:85%"><strong>Почему 72B, а не 32B:</strong> юридическая точность, нормоконтроль с длинными СП, мультимодальность для чертежей, прогнозирование на больших исторических данных — всё это требует моделей уровня 70B+.</p>
+  </section>
+
+  <!-- SLIDE 7: ТЕХНИЧЕСКИЕ РЕШЕНИЯ -->
+  <section class="slide">
+    <div class="slide-num">06 · Техническое решение</div>
+    <div class="brand">DGX Spark</div>
+    <h2 class="fade-up">NVIDIA DGX Spark <strong>vs RTX 4090</strong></h2>
+    <div class="table-container fade-up">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Параметр</th>
+            <th>RTX 4090 Workstation (2×GPU)</th>
+            <th>NVIDIA DGX Spark (GB10)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Архитектура</strong></td>
+            <td>Ada Lovelace (2022)</td>
+            <td style="color:var(--accent)"><strong>Grace Blackwell (2025)</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Unified Memory</strong></td>
+            <td>48 GB VRAM (2×24GB)</td>
+            <td style="color:var(--accent)"><strong>128 GB (CPU+GPU)</strong></td>
+          </tr>
+          <tr>
+            <td><strong>AI Performance</strong></td>
+            <td>~165 TFLOPS (FP16)</td>
+            <td style="color:var(--accent)"><strong>1 PFLOPS (INT4) / 500 TFLOPS (FP4)</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Масштабирование</strong></td>
+            <td>Ограничено (1-2 GPU)</td>
+            <td style="color:var(--accent)"><strong>Scale-Out кластер</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Энергопотребление</strong></td>
+            <td>~600W</td>
+            <td style="color:var(--accent)"><strong>~200W</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Цена в РФ (с НДС, доставкой)</strong></td>
+            <td>~1 200 000 ₽</td>
+            <td style="color:var(--accent)"><strong>~600 000 ₽</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Поддержка 72B моделей</strong></td>
+            <td>Только INT4, медленно</td>
+            <td style="color:var(--accent)"><strong>INT4/FP4, быстро</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead fade-up" style="margin-top:3vh; max-width:85%"><strong>Вывод:</strong> DGX Spark — оптимальное решение для запуска 72B моделей локально. Масштабирование через добавление узлов (Scale-Out) позволяет наращивать мощность по мере роста задач. <strong style="color:var(--danger)">Риск:</strong> поставки в РФ могут быть сложными — требуется параллельный импорт.</p>
+  </section>
+
+  <!-- SLIDE 8: БЮДЖЕТ -->
+  <section class="slide">
+    <div class="slide-num">07 · Бюджет</div>
+    <div class="brand">Стоимостные решения</div>
+    <h2 class="fade-up">Инвестиции и <strong>окупаемость</strong></h2>
+    <div class="table-container fade-up">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width:18%">Этап</th>
+            <th style="width:52%">Действия</th>
+            <th style="width:15%">Тип</th>
+            <th style="width:15%">Бюджет</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Месяц 1-2</strong></td>
+            <td>1× DGX Spark + NAS. Настройка RAG по СП/ГОСТ, OCR, Email-to-Task. Пилот на 2 проектах.</td>
+            <td>CapEx + OpEx</td>
+            <td>~1 100 000 ₽</td>
+          </tr>
+          <tr>
+            <td><strong>Месяц 3-4</strong></td>
+            <td>2-й DGX Spark. Запуск 72B моделей. Плагин Revit → Kaiten. API Kaiten ↔ ЭЛМА. Юридический AI. <strong>AI-движок обработки замечаний (парсинг, VL-сравнение, RAG, рассылки).</strong></td>
+            <td>CapEx + OpEx</td>
+            <td>~2 750 000 ₽</td>
+          </tr>
+          <tr>
+            <td><strong>Месяц 5-6</strong></td>
+            <td>3-й DGX Spark. Мультимодальный анализ (VL-72B). Нормоконтроль с подсказками по нормам. <strong>Конструкторы ТЗ и ответов на замечания.</strong></td>
+            <td>CapEx + OpEx</td>
+            <td>~2 000 000 ₽</td>
+          </tr>
+          <tr>
+            <td><strong>Месяц 7-9</strong></td>
+            <td>4-й DGX Spark. Масштабирование. <strong>Конструктор должностных инструкций.</strong> Обучение. Human in the loop для экспертизы.</td>
+            <td>CapEx + OpEx</td>
+            <td>~1 750 000 ₽</td>
+          </tr>
+          <tr>
+            <td><strong>Лицензии Kaiten</strong></td>
+            <td>100 пользователей × 580 ₽/мес × 12 мес.</td>
+            <td>OpEx (SaaS)</td>
+            <td>~696 000 ₽</td>
+          </tr>
+          <tr>
+            <td class="total"><strong>ИТОГО</strong></td>
+            <td class="total">«Легкий СОД» с AI-кластером DGX Spark + 4 конструктора + AI-движок замечаний.</td>
+            <td class="total">CapEx + OpEx</td>
+            <td class="total">~8 296 000 ₽</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="stats fade-up" style="margin-top:3vh">
+      <div class="stat">
+        <div class="stat-num">8.3M</div>
+        <div class="stat-label">итоговые<br>инвестиции</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">9</div>
+        <div class="stat-label">месяцев до<br>полного внедрения</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5</div>
+        <div class="stat-label">ключевых AI-<br>модулей</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3×</div>
+        <div class="stat-label">больше ценности<br>vs покупка СОД</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9: SCALE-OUT -->
+  <section class="slide">
+    <div class="slide-num">08 · Scale-Out</div>
+    <div class="brand">NVIDIA DGX Spark кластер</div>
+    <h2 class="fade-up">Поэтапное наращивание <strong>мощности</strong></h2>
+    <div class="grid-4 fade-up">
+      <div class="card accent">
+        <div class="card-num">01</div>
+        <h4>1× DGX Spark</h4>
+        <p>128GB unified. RAG, OCR, Email-to-Task, базовый нормоконтроль. Автоматизация 30% рутины.</p>
+        <div style="margin-top:1.5vh; color:var(--accent); font-weight:600">~600 000 ₽</div>
+      </div>
+      <div class="card accent">
+        <div class="card-num">02</div>
+        <h4>2× DGX Spark</h4>
+        <p>256GB total. Запуск 72B моделей. <strong>AI-движок замечаний (парсинг Word, VL-сравнение с чертежами, RAG паттернов).</strong></p>
+        <div style="margin-top:1.5vh; color:var(--accent); font-weight:600">~600 000 ₽</div>
+      </div>
+      <div class="card accent">
+        <div class="card-num">03</div>
+        <h4>3× DGX Spark</h4>
+        <p>384GB total. Мультимодальный анализ. Нормоконтроль с подсказками по нормам. Конструкторы ТЗ и ответов.</p>
+        <div style="margin-top:1.5vh; color:var(--accent); font-weight:600">~600 000 ₽</div>
+      </div>
+      <div class="card accent">
+        <div class="card-num">04</div>
+        <h4>4× DGX Spark</h4>
+        <p>512GB total. Все модули + конструктор должностных инструкций. Высокая доступность. 100 пользователей параллельно.</p>
+        <div style="margin-top:1.5vh; color:var(--accent); font-weight:600">~600 000 ₽</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10: ДОРОЖНАЯ КАРТА -->
+  <section class="slide">
+    <div class="slide-num">09 · Дорожная карта</div>
+    <div class="brand">9 месяцев</div>
+    <h2 class="fade-up">Путь <strong>внедрения</strong></h2>
+    <div class="grid-2 fade-up">
+      <div>
+        <h3>Этапы</h3>
+        <ul class="clean">
+          <li><strong>Месяц 1-2:</strong> 1× DGX Spark. RAG по СП/ГОСТ. OCR. Email-to-Task. Пилот на 2 проектах с группой из 5 ГИПов.</li>
+          <li><strong>Месяц 3-4:</strong> 2× DGX Spark. Запуск 72B моделей. Плагин Revit → Kaiten. API Kaiten ↔ ЭЛМА. <strong>Запуск AI-движка обработки замечаний (парсинг Word, VL-сравнение, рассылки).</strong></li>
+          <li><strong>Месяц 5-6:</strong> 3× DGX Spark. Мультимодальный анализ. Нормоконтроль с подсказками по нормам. Конструкторы ТЗ и ответов на замечания.</li>
+          <li><strong>Месяц 7-9:</strong> 4× DGX Spark. Масштабирование на все отделы. Конструктор должностных инструкций. Обучение. Human in the loop для экспертизы.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Результат</h3>
+        <ul class="clean">
+          <li><strong>Автоматизация 85% рутины</strong> — от формирования альбомов до нормоконтроля</li>
+          <li><strong>AI закрывает роль ПТО</strong> — проверка комплектности, коллизии, несоответствия нормам</li>
+          <li><strong>AI-движок замечаний</strong> — автоматическая БД, проверка легитимности по актуальным чертежам, чек-листы МФР/ДГП</li>
+          <li><strong>4 конструктора документов</strong> — договоры, ТЗ, ответы на замечания, должностные инструкции</li>
+          <li><strong>Единая коммуникация</strong> — шаблоны Outlook → Kaiten → Google Таблицы → ЭЛМА</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11: РЕКОМЕНДАЦИИ -->
+  <section class="slide">
+    <div class="slide-num">10 · Рекомендации</div>
+    <div class="brand">Стратегия</div>
+    <h2 class="fade-up">4 стратегических <strong>решения</strong></h2>
+    <div class="grid-2 fade-up">
+      <div class="card accent">
+        <div class="card-num">01</div>
+        <h4>Не покупать полный СОД</h4>
+        <p>Пока Заказчик не требует его в явном виде и не готов за него платить, покупка коробочного СОД (Pilot-BIM, Vitro) — неоправданная трата бюджета.</p>
+      </div>
+      <div class="card accent">
+        <div class="card-num">02</div>
+        <h4>Развивать «Легкий СОД» на базе Kaiten</h4>
+        <p>Kaiten — ядро для управления задачами и файлами. Интеграция с Revit через API и ЭЛМА через REST API закроет потребность в версионности и согласованиях.</p>
+      </div>
+      <div class="card gold">
+        <div class="card-num">03</div>
+        <h4>Инвестировать в AI-кластер DGX Spark</h4>
+        <p>Локальные 72B модели и Scale-Out архитектура дадут то, чего нет ни в одном коробочном СОД: юридический анализ, нормоконтроль, прогнозирование, мультимодальность.</p>
+      </div>
+      <div class="card gold">
+        <div class="card-num">04</div>
+        <h4>Стратегия работы с Заказчиком</h4>
+        <p>Заказчик живёт в парадигме «мы так привыкли». Когда дорастёт до цифровой трансформации — он купит СОД и даст нам портал. Мы обеспечиваем выдачу данных (IFC, PDF, DWG).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 12: FINAL -->
+  <section class="slide slide-titular">
+    <div class="eyebrow fade-up">Резюме</div>
+    <h1 class="fade-up">Гибкая связка<br><strong>Kaiten + Revit API + DGX Spark</strong></h1>
+    <div class="lead fade-up">Scale-Out AI-кластер на базе NVIDIA DGX Spark с локальными 72B моделями и AI-движком обработки замечаний. Сопоставимо по стоимости с нижним порогом покупки полного СОД, но даёт 3× большую ценность: 100% покрытие потребностей, AI-возможности enterprise-уровня, и полная независимость от вендоров.</div>
+    <div class="meta fade-up" style="margin-top:6vh">
+      <span>Телефон<b>+7 (923) 244-80-50</b></span>
+      <span>Email<b>uas@parametrica.team</b></span>
+      <span>Telegram<b>@austyuzhanin</b></span>
+    </div>
+  </section>
+
+</div>
+
+<!-- МОДАЛЬНЫЕ ОКНА -->
+<div class="modal-overlay" id="modal-functions" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalDirect()">×</button>
+    <h3>Таблица 36 функций CDE</h3>
+    <p>Полный анализ функционала коробочных СОД (Pilot-BIM, Vitro-CAD и др.) по 36 функциям.</p>
+    <h4>Что нам нужно (6 функций = 90% эффективности):</h4>
+    <ul>
+      <li>Файлообменник с папками (ISO 19650)</li>
+      <li>Версионирование файлов</li>
+      <li>Атрибуты и поиск</li>
+      <li>Замечания к файлам</li>
+      <li>Согласование с маршрутами</li>
+      <li>Документооборот проекта</li>
+      <li>API для интеграций</li>
+      <li>Хранение на своих серверах</li>
+      <li>SDK / расширяемость</li>
+    </ul>
+    <h4>Мертвый груз (не покупаем):</h4>
+    <ul>
+      <li>Стройконтроль, фото360, облака точек</li>
+      <li>Исполнительная документация</li>
+      <li>Тендеры и закупки, комплектация материалами</li>
+      <li>Цифровой двойник</li>
+      <li>Мониторинг финансирования</li>
+      <li>Личный кабинет подрядчика</li>
+    </ul>
+    <h4>Ключевой вывод:</h4>
+    <p>Функция №32 (Машинное обучение/AI) отсутствует у ВСЕХ вендоров. Это наше окно возможностей — внедряем локальные 72B модели и получаем уникальное конкурентное преимущество.</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-compare" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalDirect()">×</button>
+    <h3>Сравнение: покупка vs свой «Легкий СОД»</h3>
+    <table class="table" style="margin-top:2vh">
+      <thead>
+        <tr>
+          <th>Критерий</th>
+          <th>Покупка полного СОД</th>
+          <th>Свой «Легкий СОД»</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Стоимость 1-й год (100 мест)</strong></td>
+          <td>~3-6 млн ₽</td>
+          <td style="color:var(--accent)"><strong>~8.3 млн ₽</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Использование функционала</strong></td>
+          <td>30-40%</td>
+          <td style="color:var(--accent)"><strong>100%</strong></td>
+        </tr>
+        <tr>
+          <td><strong>AI-возможности</strong></td>
+          <td>Отсутствуют</td>
+          <td style="color:var(--accent)"><strong>Полный стек 72B + 4 конструктора + AI-движок замечаний</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Гибкость</strong></td>
+          <td>Низкая</td>
+          <td style="color:var(--accent)"><strong>Максимальная</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Зависимость от Заказчика</strong></td>
+          <td>Навязываем систему</td>
+          <td>Работаем в своей среде</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:2vh"><strong>Вывод:</strong> За сопоставимые деньги получаем 3× большую ценность — 100% покрытие потребностей + AI enterprise-уровня, которого нет ни у одного вендора.</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-why" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalDirect()">×</button>
+    <h3>Почему не коробочный СОД</h3>
+    <h4>Проблема «Бульдозера для картошки»</h4>
+    <p>Рынок СОД (Pilot-BIM, Vitro-CAD) ориентирован на Заказчика/Девелопера и Генподрядчика. Функции стройконтроля, фото360, порталы подрядчиков, управление поставками составляют до 60% стоимости и функционала. Для проектного бюро это мертвый груз.</p>
+    <h4>Реальность Государственной Экспертизы</h4>
+    <p>Формально требования к BIM-модели существуют. Но в РФ (2026) отсутствует полноценное отечественное ПО для замены Revit. Экспертиза принимает документацию преимущественно в PDF/DWG. Жесткие требования к OpenBIM на практике отсутствуют.</p>
+    <h4>Кто должен платить?</h4>
+    <p>Если Заказчику нужен полный СОД — это его зона ответственности и его бюджет. Он должен купить СОД и «затаскивать» в него всех участников. Покупать СОД своими силами, чтобы уговаривать Заказчика — стратегическая ошибка.</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-needs" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalDirect()">×</button>
+    <h3>6 реальных потребностей Генпроектировщика</h3>
+    <p>Если отсечь «строительный» и «заказчицкий» функционал, реально необходимые функции СОД для проектного бюро:</p>
+    <ul>
+      <li><strong>Версионность файлов</strong> (RVT, IFC, PDF, DWG) с историей изменений</li>
+      <li><strong>Система замечаний</strong> (Issue Tracking), привязанная к листам или элементам модели</li>
+      <li><strong>Внутренние маршруты согласования</strong> (до выпуска Заказчику)</li>
+      <li><strong>Централизованный архив</strong> проектов и единое пространство данных</li>
+      <li><strong>Авто-Ведомости выдачи</strong> документов</li>
+      <li><strong>Интеграция с ЭЛМА</strong> (связь технических файлов с договорами и счетами)</li>
+    </ul>
+    <p style="margin-top:2vh"><strong>Именно эти 6 функций дают 90% прироста эффективности бюро.</strong> Остальные 30 функций из стандартного списка СОД нам не нужны.</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-customer" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalDirect()">×</button>
+    <h3>Кто должен платить за СОД</h3>
+    <p>Полный СОД нужен заказчику для контроля стройки и управления подрядчиками — именно он должен быть инициатором, это его зона ответственности и его бюджет.</p>
+    <h4>Разделение ответственности:</h4>
+    <ul>
+      <li><strong>Заказчик покупает</strong> — полный СОД для управления стройкой, подрядчиками, исполнительной документацией</li>
+      <li><strong>Заказчик предоставляет</strong> — портал/доступ всем участникам: проектировщикам, генподрядчикам, субподрядчикам</li>
+      <li><strong>Мы обеспечиваем</strong> — выдачу данных в требуемых форматах (IFC, PDF, DWG) через наш «Легкий СОД»</li>
+    </ul>
+    <p style="margin-top:2vh">Только при условии работы всеми участниками в единой цифровой среде, технологии BIM «взлетят» и дадут качественно иной уровень в работе строителя.</p>
+  </div>
+</div>
+
+<!-- НОВОЕ МОДАЛЬНОЕ ОКНО: AI-ДВИЖОК ЗАМЕЧАНИЙ -->
+<div class="modal-overlay" id="modal-comments-engine" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalDirect()">×</button>
+    <h3>🚀 AI-движок обработки замечаний проверяющих органов</h3>
+    
+    <h4>Проблема</h4>
+    <p>Сотни Word-файлов (10 КБ – 5 МБ) в месяц от МФР, ДГП, экспертизы. Вручную: извлечение шифров, осей, фрагментов изображений, текста замечания и автора занимает дни. Высокий риск пропустить критичное замечание или не заметить, что оно уже устранено в актуальной версии.</p>
+    
+    <h4>Технический стек</h4>
+    <ul>
+      <li><strong>Парсинг:</strong> python-docx (извлечение текста, таблиц, изображений, метаданных)</li>
+      <li><strong>OCR:</strong> PaddleOCR (распознавание текста на фрагментах чертежей)</li>
+      <li><strong>Логика и классификация:</strong> Qwen2.5-72B-Instruct (типизация, извлечение сущностей: раздел, ссылка на СП, критичность)</li>
+      <li><strong>Проверка легитимности (VLM):</strong> Qwen2-VL-72B (сравнение фрагмента из замечания с актуальным чертежом, загруженным с сервера по шифру)</li>
+      <li><strong>RAG и БД:</strong> BGE-m3 + Qdrant + PostgreSQL (векторизация, поиск исторических паттернов)</li>
+    </ul>
+    
+    <h4>Пайплайн обработки (6 этапов)</h4>
+    <div class="mockup">
+      <div class="mockup-row"><div class="mockup-indicator green"></div><div class="mockup-label">1. Парсинг Word: извлечение текста, осей, шифра, автора, изображений</div></div>
+      <div class="mockup-row"><div class="mockup-indicator green"></div><div class="mockup-label">2. OCR: распознавание текста на фрагментах чертежей</div></div>
+      <div class="mockup-row"><div class="mockup-indicator yellow"></div><div class="mockup-label">3. Структурирование (72B): типизация (пожарка/конструктив), оценка критичности</div></div>
+      <div class="mockup-row"><div class="mockup-indicator yellow"></div><div class="mockup-label">4. Проверка легитимности (VL-72B): сравнение фрагмента с актуальной моделью на сервере</div></div>
+      <div class="mockup-row"><div class="mockup-indicator green"></div><div class="mockup-label">5. RAG + БД: сохранение, поиск похожих замечаний в истории</div></div>
+      <div class="mockup-row"><div class="mockup-indicator green"></div><div class="mockup-label">6. Паттерны + рассылка: генерация сводных писем ГИПам и чек-листов МФР/ДГП</div></div>
+    </div>
+    
+    <h4>Реализуемость на DGX Spark</h4>
+    <p><strong>Да, реализуемо.</strong> 128 ГБ унифицированной памяти DGX Spark достаточно.</p>
+    <ul>
+      <li><strong>Вариант А (1 DGX Spark):</strong> Последовательная обработка. Модели подгружаются по очереди. Пропускная способность: ~1-2 минуты на файл. Для сотен файлов в месяц достаточно пакетной обработки (ночью/в фоне).</li>
+      <li><strong>Вариант Б (2 DGX Spark, рекомендуется):</strong> Параллельная обработка. Один узел держит Qwen2.5-72B (логика, RAG), второй выделен под Qwen2-VL-72B (анализ изображений). Максимальная скорость и качество.</li>
+    </ul>
+    
+    <h4>Затраты и сроки</h4>
+    <ul>
+      <li><strong>Срок:</strong> ~24 недели (6 месяцев) поэтапной разработки</li>
+      <li><strong>Стоимость разработки:</strong> ~2 150 000 ₽ (ФОТ команды: frontend, backend, AI-инженер)</li>
+      <li><strong>Железо:</strong> +600 000 ₽ (за 2-й DGX Spark для параллельной работы, опционально)</li>
+    </ul>
+    
+    <h4>Эффект</h4>
+    <ul>
+      <li>Сокращение времени обработки замечаний с <strong>дней до часов</strong></li>
+      <li>Автоматическое формирование <strong>чек-листов проверяющих органов</strong> на основе выявленных паттернов</li>
+      <li>Снижение количества возвратов документации за счет <strong>предварительной AI-проверки легитимности</strong></li>
+    </ul>
+  </div>
+</div>
+
+<!-- КОНСТРУКТОР ДОГОВОРОВ -->
+<div class="modal-overlay" id="modal-constructor-contract" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalDirect()">×</button>
+    <h3>📄 Конструктор договоров</h3>
+    
+    <h4>Проблема</h4>
+    <p>Юристы тратят 3-5 дней на подготовку типового договора. 70-80% содержания стандартно, но каждый раз собирается вручную. Высокий риск юридических ошибок и несоответствий ГК РФ.</p>
+    
+    <h4>Технический стек</h4>
+    <ul>
+      <li><strong>Frontend:</strong> React + TypeScript + Ant Design (компоненты деревьев и чекбоксов)</li>
+      <li><strong>Backend:</strong> Python FastAPI + PostgreSQL + pgvector (для RAG)</li>
+      <li><strong>AI-модели:</strong> Qwen2.5-72B-Instruct (логика) + BGE-m3 (embeddings) + Qwen2-VL-72B (анализ сканов)</li>
+      <li><strong>Интеграции:</strong> 1С:Договоры, ЭЛМА, Контур.Проверка/СПАРК, судебная практика (RAG)</li>
+    </ul>
+    
+    <h4>Интерфейс пользователя</h4>
+    <div class="mockup">
+      <div class="mockup-row">
+        <div class="mockup-indicator green"></div>
+        <div class="mockup-label">1. ПРЕДМЕТ ДОГОВОРА — Наименование товара/услуги ✓</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator green"></div>
+        <div class="mockup-label">2. СТОИМОСТЬ И ОПЛАТА — Цена, НДС, аванс ✓</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator yellow"></div>
+        <div class="mockup-label">3. СРОКИ ПОСТАВКИ — Требует уточнения ⚠</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator red"></div>
+        <div class="mockup-label">4. ОТВЕТСТВЕННОСТЬ — Неустойка 0.5%/день (риск!) ✗</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator gray"></div>
+        <div class="mockup-label">5. РАЗРЕШЕНИЕ СПОРОВ — Опционально ○</div>
+      </div>
+    </div>
+    
+    <h4>Как работает AI-агент</h4>
+    <ul>
+      <li>Анализирует тип договора (поставка, услуги, подряд, аренда) → автоматически подгружает нужные ветки дерева</li>
+      <li>Извлекает данные из входящего письма/ТЗ (NLP) → автозаполнение полей</li>
+      <li>Проверяет риски: <strong style="color:var(--danger)">красным</strong> — юридические риски (несоответствие ГК РФ), <strong style="color:var(--gold)">желтым</strong> — нестандартные условия, <strong style="color:var(--accent)">зеленым</strong> — типовые безопасные формулировки</li>
+      <li>RAG по базе договоров: поиск похожих договоров в компании, предложение формулировок из успешных контрактов</li>
+      <li>Анализ истории разногласий с контрагентом</li>
+      <li>Генерация полного текста договора по выбранным пунктам</li>
+    </ul>
+    
+    <h4>Затраты и сроки</h4>
+    <ul>
+      <li><strong>Срок:</strong> 19 недель (4-5 месяцев)</li>
+      <li><strong>Стоимость:</strong> ~2 050 000 ₽</li>
+      <li><strong>Команда:</strong> 1 frontend + 1 backend + 1 AI-инженер</li>
+    </ul>
+    
+    <h4>Эффект</h4>
+    <ul>
+      <li>Сокращение времени подготовки договора с <strong>3-5 дней до 2-3 часов</strong></li>
+      <li>Снижение юридических рисков на <strong>60-70%</strong></li>
+      <li>Стандартизация договорной базы</li>
+      <li>Экономия ~150-200 часов юристов в месяц</li>
+    </ul>
+  </div>
+</div>
+
+<!-- КОНСТРУКТОР ТЗ -->
+<div class="modal-overlay" id="modal-constructor-tz" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalDirect()">×</button>
+    <h3>📋 Конструктор ТЗ</h3>
+    
+    <h4>Проблема</h4>
+    <p>ГИПы тратят много времени на составление ТЗ для смежников (КЖ, ИОС, КМ). Нет единого стандарта, часто забывают обязательные требования по ГОСТ/СП.</p>
+    
+    <h4>Технический стек</h4>
+    <ul>
+      <li><strong>Frontend:</strong> React + TypeScript + Ant Design</li>
+      <li><strong>Backend:</strong> Python FastAPI + PostgreSQL</li>
+      <li><strong>AI-модели:</strong> Qwen2.5-72B-Instruct (логика) + BGE-m3 (RAG по предыдущим ТЗ)</li>
+      <li><strong>Интеграции:</strong> Revit API (автоизвлечение ТЭП), Kaiten (задачи смежникам)</li>
+    </ul>
+    
+    <h4>Интерфейс пользователя</h4>
+    <div class="mockup">
+      <div class="mockup-row">
+        <div class="mockup-indicator green"></div>
+        <div class="mockup-label">1. ОСНОВАНИЕ — Договор №123 от 01.09.2026 ✓</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator green"></div>
+        <div class="mockup-label">2. ИСХОДНЫЕ ДАННЫЕ — Площадь 15000 м², 25 этажей ✓</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator yellow"></div>
+        <div class="mockup-label">3. ТРЕБОВАНИЯ К МОДЕЛИ — LOD 300/400 </div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator green"></div>
+        <div class="mockup-label">4. СОСТАВ ДОКУМЕНТАЦИИ — АР, КЖ, ИОС ✓</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator red"></div>
+        <div class="mockup-label">5. СРОКИ — Не указаны! ✗</div>
+      </div>
+    </div>
+    
+    <h4>Как работает AI-агент</h4>
+    <ul>
+      <li>Анализирует тип объекта (ЖК, офис, склад, модульное здание) → подгружает шаблон ТЗ</li>
+      <li>Автоизвлечение данных из BIM-модели (площадь, этажность, ТЭП) → автозаполнение полей</li>
+      <li>RAG по базе предыдущих ТЗ → предложение формулировок из успешных проектов</li>
+      <li>Подсветка обязательных требований по ГОСТ/СП</li>
+      <li>Проверка полноты ТЗ перед отправкой смежникам</li>
+    </ul>
+    
+    <h4>Затраты и сроки</h4>
+    <ul>
+      <li><strong>Срок:</strong> 8 недель (2 месяца)</li>
+      <li><strong>Стоимость:</strong> ~800 000 ₽</li>
+      <li><strong>Команда:</strong> 1 frontend + 1 backend + 1 AI-инженер (частично)</li>
+    </ul>
+    
+    <h4>Эффект</h4>
+    <ul>
+      <li>Сокращение времени составления ТЗ с <strong>4-6 часов до 30-40 минут</strong></li>
+      <li>Стандартизация ТЗ по компании</li>
+      <li>Снижение количества уточнений от смежников на <strong>50%</strong></li>
+    </ul>
+  </div>
+</div>
+
+<!-- КОНСТРУКТОР ОТВЕТОВ НА ЗАМЕЧАНИЯ -->
+<div class="modal-overlay" id="modal-constructor-responses" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalDirect()">×</button>
+    <h3>✉️ Конструктор ответов на замечания</h3>
+    
+    <h4>Проблема</h4>
+    <p>Ручное составление таблиц ответов на замечания ГГЭ/МГЭ занимает 2-3 дня. Часто забывают ответить на часть замечаний, формулировки несогласованны.</p>
+    
+    <h4>Технический стек</h4>
+    <ul>
+      <li><strong>Frontend:</strong> React + TypeScript + Ant Design</li>
+      <li><strong>Backend:</strong> Python FastAPI + PostgreSQL</li>
+      <li><strong>AI-модели:</strong> Qwen2.5-72B-Instruct (генерация ответов) + PaddleOCR (распознавание PDF замечаний) + BGE-m3 (RAG по базе успешных ответов)</li>
+      <li><strong>Интеграции:</strong> Экспорт в Excel/Word, ЭЛМА (маршрутизация на согласование)</li>
+    </ul>
+    
+    <h4>Интерфейс пользователя</h4>
+    <div class="mockup">
+      <div class="mockup-row">
+        <div class="mockup-indicator green"></div>
+        <div class="mockup-label">Замечание №1 (АР) — Принято, исправлено ✓</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator yellow"></div>
+        <div class="mockup-label">Замечание №2 (КЖ) — Частично принято, требуется уточнение ⚠</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator red"></div>
+        <div class="mockup-label">Замечание №3 (ИОС) — Не принято, обоснование ✗</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator gray"></div>
+        <div class="mockup-label">Замечание №4 (АР) — Ожидает ответа ○</div>
+      </div>
+    </div>
+    
+    <h4>Как работает AI-агент</h4>
+    <ul>
+      <li>Загрузка PDF с замечаниями → OCR (PaddleOCR) → извлечение текста</li>
+      <li>AI группирует замечания по разделам (АР, КЖ, ИОС)</li>
+      <li>RAG по базе успешных ответов → предложение формулировок из похожих проектов</li>
+      <li>AI генерирует черновик ответа для каждого замечания</li>
+      <li>Юрист/ГИП проверяет и утверждает (Human in the loop)</li>
+      <li>Автоматическая генерация итоговой таблицы в Excel/Word</li>
+      <li>Проверка полноты ответов (AI сверяет с требованиями экспертизы)</li>
+    </ul>
+    
+    <h4>Затраты и сроки</h4>
+    <ul>
+      <li><strong>Срок:</strong> 6 недель (1.5 месяца)</li>
+      <li><strong>Стоимость:</strong> ~600 000 ₽</li>
+      <li><strong>Команда:</strong> 1 frontend + 1 backend + 1 AI-инженер (частично)</li>
+    </ul>
+    
+    <h4>Эффект</h4>
+    <ul>
+      <li>Сокращение времени подготовки ответов с <strong>2-3 дней до 2-3 часов</strong></li>
+      <li>Снижение количества возвратов от экспертизы на <strong>40-50%</strong></li>
+      <li>Стандартизация формулировок ответов</li>
+    </ul>
+  </div>
+</div>
+
+<!-- КОНСТРУКТОР ДОЛЖНОСТНЫХ ИНСТРУКЦИЙ -->
+<div class="modal-overlay" id="modal-constructor-job" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalDirect()">×</button>
+    <h3>👤 Конструктор должностных инструкций</h3>
+    
+    <h4>Проблема</h4>
+    <p>HR и руководители тратят 2-3 часа на составление каждой должностной инструкции. Нет единого стандарта, часто дублируются или забываются важные обязанности.</p>
+    
+    <h4>Технический стек</h4>
+    <ul>
+      <li><strong>Frontend:</strong> React + TypeScript + Ant Design (компоненты деревьев и чекбоксов)</li>
+      <li><strong>Backend:</strong> Python FastAPI + PostgreSQL + pgvector (для RAG)</li>
+      <li><strong>AI-модели:</strong> Qwen2.5-72B-Instruct (логика) + BGE-m3 (embeddings для поиска похожих должностей)</li>
+      <li><strong>База данных:</strong> 500-1000 пунктов обязанностей с метаданными (категория, обязательность, связанные должности)</li>
+    </ul>
+    
+    <h4>Интерфейс пользователя</h4>
+    <div class="mockup">
+      <div class="mockup-row">
+        <div class="mockup-indicator green"></div>
+        <div class="mockup-label">Администрирование активного телекоммуникационного оборудования ✓</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator green"></div>
+        <div class="mockup-label">Актуализировать эксплуатационную документацию ✓</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator yellow"></div>
+        <div class="mockup-label">Анализировать возможности для улучшений  (рекомендуется)</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-indicator gray"></div>
+        <div class="mockup-label">Ведение реестра кадровых документов ○ (опционально)</div>
+      </div>
+    </div>
+    
+    <h4>Как работает AI-агент</h4>
+    <ul>
+      <li>Извлечение названия должности и цели (NLP)</li>
+      <li>Поиск похожих позиций в базе RAG (BGE-m3 embeddings)</li>
+      <li>Qwen2.5-72B анализирует:
+        <ul>
+          <li>Соответствие обязанностям по ФГОС/профстандартам</li>
+          <li>Историю похожих позиций в компании</li>
+          <li>Отраслевые требования</li>
+        </ul>
+      </li>
+      <li>Генерация рекомендаций с весами (0-100%)</li>
+      <li>Визуализация в UI с цветовой индикацией: <strong style="color:var(--accent)">зеленый</strong> — обязательно, <strong style="color:var(--gold)">желтый</strong> — рекомендуется, <strong style="color:var(--text-muted)">серый</strong> — опционально</li>
+    </ul>
+    
+    <h4>Затраты и сроки</h4>
+    <ul>
+      <li><strong>Срок:</strong> 9 недель (2 месяца)</li>
+      <li><strong>Стоимость:</strong> ~1 050 000 ₽</li>
+      <li><strong>Команда:</strong> 1 frontend + 1 backend + 1 AI-инженер</li>
+    </ul>
+    
+    <h4>Эффект</h4>
+    <ul>
+      <li>Сокращение времени составления ДИ с <strong>2-3 часов до 15-20 минут</strong></li>
+      <li>Стандартизация должностных инструкций по компании</li>
+      <li>AI экономит ~80% времени HR и руководителей</li>
+    </ul>
+  </div>
+</div>
+
+<div class="slide-counter"><b id="current">01</b> / <span id="total">12</span></div>
+<div class="hint">Навигация: <kbd>←</kbd> <kbd>→</kbd> <kbd>Space</kbd> · Свайп на мобильных</div>
+<div class="nav">
+  <button id="prev" aria-label="Предыдущий">‹</button>
+  <button id="next" aria-label="Следующий">›</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  
+  document.getElementById('total').textContent = String(total).padStart(2, '0');
+  
+  function showSlide(n) {
+    if (n < 0 || n >= total) return;
+    slides.forEach((s) => { s.classList.remove('active'); });
+    slides[n].classList.add('active');
+    current = n;
+    document.getElementById('current').textContent = String(n + 1).padStart(2, '0');
+    document.getElementById('progress').style.width = ((n + 1) / total * 100) + '%';
+    document.getElementById('prev').disabled = n === 0;
+    document.getElementById('next').disabled = n === total - 1;
+  }
+  
+  function next() { if (current < total - 1) showSlide(current + 1); }
+  function prev() { if (current > 0) showSlide(current - 1); }
+  
+  document.getElementById('next').addEventListener('click', next);
+  document.getElementById('prev').addEventListener('click', prev);
+  
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') showSlide(0);
+    else if (e.key === 'End') showSlide(total - 1);
+    else if (e.key === 'Escape') closeModalDirect();
+  });
+  
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  
+  document.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      dx > 0 ? prev() : next();
+    }
+  }, { passive: true });
+  
+  function openModal(id) {
+    document.getElementById(id).classList.add('active');
+  }
+  
+  function closeModal(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+      event.target.classList.remove('active');
+    }
+  }
+  
+  function closeModalDirect() {
+    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+  }
+  
+  let hintShown = true;
+  const hint = document.querySelector('.hint');
+  function hideHint() {
+    if (hintShown && hint) {
+      hint.style.transition = 'opacity 0.5s';
+      hint.style.opacity = '0';
+      hintShown = false;
+    }
+  }
+  document.addEventListener('keydown', hideHint, { once: true });
+  document.addEventListener('click', hideHint, { once: true });
+  
+  showSlide(0);
+</script>
+
+</body>
+</html>
